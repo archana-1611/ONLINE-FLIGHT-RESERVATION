@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyWings Airlines | Global Flight Reservation & Management System</title>
+  <meta name="description" content="Online flight reservation system to search flights, select cabin seats, book tickets, manage reservations, track live PNR status, and access admin flight operations.">
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header class="site-header">
+    <div class="container">
+      <div class="nav-inner">
+        <!-- Brand Logo -->
+        <a href="#search" class="brand-logo" id="brand-logo-btn">
+          <div class="logo-icon-wrap">✈</div>
+          <div class="logo-text-wrap">
+            <span class="logo-title">SKYWINGS</span>
+            <span class="logo-sub">GLOBAL AIRWAYS</span>
+          </div>
+        </a>
+
+        <!-- Main Navigation Links -->
+        <ul class="nav-links">
+          <li>
+            <button class="nav-link-btn active" data-view="search" id="nav-search-btn">
+              <span>🔍</span> Search Flights
+            </button>
+          </li>
+          <li>
+            <button class="nav-link-btn" data-view="status" id="nav-status-btn">
+              <span>🛰️</span> View Status
+            </button>
+          </li>
+          <li>
+            <button class="nav-link-btn" data-view="my-tickets" id="nav-tickets-btn">
+              <span>🎫</span> My Tickets
+            </button>
+          </li>
+          <li>
+            <button class="nav-link-btn" data-view="cancel-ticket" id="nav-cancel-btn">
+              <span>❌</span> Cancel Ticket
+            </button>
+          </li>
+          <li>
+            <button class="nav-link-btn" data-view="feedback" id="nav-feedback-btn">
+              <span>💬</span> Feedback
+            </button>
+          </li>
+          <li>
+            <button class="nav-link-btn" data-view="admin" id="nav-admin-btn">
+              <span>📊</span> Admin Report
+            </button>
+          </li>
+        </ul>
+
+        <!-- User Profile & Auth Actions -->
+        <div class="nav-actions">
+          <div class="user-badge-wrap" id="user-badge" title="Click to view account details or switch role">
+            <div class="user-avatar" id="user-avatar-initials">AW</div>
+            <div class="user-info-text">
+              <span class="user-name" id="nav-user-name">Alexander Wright</span>
+              <span class="role-pill customer" id="nav-user-role">Passenger</span>
+            </div>
+          </div>
+          
+          <button class="btn btn-outline btn-sm" id="btn-open-auth">
+            <span>🔐</span> <span id="auth-btn-label">Switch / Login</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Area (Single Page Architecture with Tab Navigation) -->
+  <main class="main-content-wrap">
+    
+    <!-- =========================================================================
+         PAGE 1: SEARCH FLIGHTS PAGE
+         ========================================================================= -->
+    <section class="page-view active" id="view-search">
+      <div class="container">
+        <!-- Hero Tagline -->
+        <div class="hero-banner">
+          <div class="hero-tag">
+            <span>✨</span> Experience Next-Gen Aviation Booking
+          </div>
+          <h1 class="hero-title">
+            Fly Beyond Boundaries with <span class="gradient-text">SkyWings</span>
+          </h1>
+          <p class="hero-desc">
+            Search real-time flight schedules across 500+ global routes, reserve preferred cabin seats with our 3D cabin layout, and enjoy seamless instant e-ticket issuance.
+          </p>
+
+          <!-- Search Card Container -->
+          <div class="glass-panel search-card-main">
+            <!-- Trip Type Toggle -->
+            <div class="trip-type-selector">
+              <label class="trip-option active">
+                <input type="radio" name="tripType" value="oneway" checked> One Way
+              </label>
+              <label class="trip-option">
+                <input type="radio" name="tripType" value="roundtrip"> Round Trip
+              </label>
+              <label class="trip-option">
+                <input type="radio" name="tripType" value="multicity"> Multi-City
+              </label>
+            </div>
+
+            <!-- Search Inputs Grid -->
+            <form id="flight-search-form" class="search-grid">
+              <!-- Origin -->
+              <div class="search-field-group">
+                <label for="search-origin"><span>🛫</span> From (Origin)</label>
+                <select id="search-origin" class="input-box" required>
+                  <option value="DXB" selected>Dubai (DXB) - Intl Airport</option>
+                  <option value="JFK">New York (JFK) - John F. Kennedy</option>
+                  <option value="LHR">London (LHR) - Heathrow</option>
+                  <option value="SIN">Singapore (SIN) - Changi Airport</option>
+                  <option value="DEL">New Delhi (DEL) - Indira Gandhi</option>
+                  <option value="BOM">Mumbai (BOM) - Chhatrapati Shivaji</option>
+                  <option value="HND">Tokyo (HND) - Haneda</option>
+                  <option value="CDG">Paris (CDG) - Charles de Gaulle</option>
+                  <option value="SYD">Sydney (SYD) - Kingsford Smith</option>
+                  <option value="FRA">Frankfurt (FRA) - am Main</option>
+                </select>
+              </div>
+
+              <!-- Swap Button -->
+              <button type="button" class="btn-swap" id="btn-swap-airports" title="Swap departure & destination">
+                ⇄
+              </button>
+
+              <!-- Destination -->
+              <div class="search-field-group">
+                <label for="search-destination"><span>🛬</span> To (Destination)</label>
+                <select id="search-destination" class="input-box" required>
+                  <option value="JFK" selected>New York (JFK) - John F. Kennedy</option>
+                  <option value="DXB">Dubai (DXB) - Intl Airport</option>
+                  <option value="LHR">London (LHR) - Heathrow</option>
+                  <option value="SIN">Singapore (SIN) - Changi Airport</option>
+                  <option value="DEL">New Delhi (DEL) - Indira Gandhi</option>
+                  <option value="BOM">Mumbai (BOM) - Chhatrapati Shivaji</option>
+                  <option value="HND">Tokyo (HND) - Haneda</option>
+                  <option value="CDG">Paris (CDG) - Charles de Gaulle</option>
+                  <option value="SYD">Sydney (SYD) - Kingsford Smith</option>
+                  <option value="FRA">Frankfurt (FRA) - am Main</option>
+                </select>
+              </div>
+
+              <!-- Travel Date -->
+              <div class="search-field-group">
+                <label for="search-date"><span>📅</span> Departure Date</label>
+                <input type="date" id="search-date" class="input-box" required>
+              </div>
+
+              <!-- Cabin Class -->
+              <div class="search-field-group">
+                <label for="search-class"><span>👑</span> Travel Class</label>
+                <select id="search-class" class="input-box">
+                  <option value="economy" selected>Economy Class</option>
+                  <option value="premium">Premium Economy</option>
+                  <option value="business">Business Class</option>
+                  <option value="first">First Class Suite</option>
+                </select>
+              </div>
+
+              <!-- Passengers -->
+              <div class="search-field-group">
+                <label for="search-passengers"><span>👥</span> Passengers</label>
+                <select id="search-passengers" class="input-box">
+                  <option value="1" selected>1 Passenger</option>
+                  <option value="2">2 Passengers</option>
+                  <option value="3">3 Passengers</option>
+                  <option value="4">4 Passengers</option>
+                </select>
+              </div>
+
+              <!-- Search CTA -->
+              <div class="search-field-group">
+                <label>&nbsp;</label>
+                <button type="submit" class="btn btn-primary" id="btn-search-flights">
+                  <span>⚡</span> Search Flights
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Flight Search Results Area -->
+        <div class="results-container" id="results-area">
+          <div class="results-header-bar">
+            <div class="results-count">
+              Available Flights: <span id="results-count-num">10 flights found</span>
+            </div>
+            <div class="sort-controls">
+              <span class="sort-label">Sort By:</span>
+              <select id="sort-select" class="input-box" style="padding: 6px 30px 6px 12px; font-size: 0.85rem;">
+                <option value="price-asc">Lowest Price ($)</option>
+                <option value="duration">Fastest Flight</option>
+                <option value="departure">Earliest Takeoff</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Results Split: Filters + Flight Cards -->
+          <div class="results-layout">
+            <!-- Sidebar Filters -->
+            <aside class="glass-panel filters-sidebar">
+              <!-- Max Price Filter -->
+              <div class="filter-section">
+                <div class="filter-title">
+                  <span>Max Price</span>
+                  <span id="price-slider-val">$3,000</span>
+                </div>
+                <input type="range" id="price-range" class="price-range-slider" min="100" max="6000" step="50" value="3000">
+                <div class="price-indicator">
+                  <span>$100</span>
+                  <span>$6,000</span>
+                </div>
+              </div>
+
+              <!-- Stops Filter -->
+              <div class="filter-section">
+                <div class="filter-title">Stops</div>
+                <div class="filter-checklist">
+                  <label class="check-item">
+                    <span><input type="checkbox" name="filterStop" value="nonstop" checked> Non-Stop Flights</span>
+                  </label>
+                  <label class="check-item">
+                    <span><input type="checkbox" name="filterStop" value="1stop" checked> 1 Stop Connection</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Airlines Filter -->
+              <div class="filter-section">
+                <div class="filter-title">Airlines</div>
+                <div class="filter-checklist" id="airlines-filter-list">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+
+              <!-- Reset Filters -->
+              <button class="btn btn-secondary btn-sm" id="btn-reset-filters" style="width: 100%; margin-top: 10px;">
+                Reset Filters
+              </button>
+            </aside>
+
+            <!-- Flight Cards List -->
+            <div class="flights-list" id="flights-list-container">
+              <!-- Dynamically populated with flight cards -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         PAGE 2: BOOK TICKET & CABIN SEAT MAP PAGE
+         ========================================================================= -->
+    <section class="page-view" id="view-book-ticket" style="display: none;">
+      <div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+        <!-- Breadcrumb & Back -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+          <button class="btn btn-secondary btn-sm" id="btn-back-to-search">
+            ← Back to Flight Search
+          </button>
+          <div class="hero-tag" style="margin-bottom: 0;">
+            Step 1 of 3: Passenger & Cabin Seat Selection
+          </div>
+        </div>
+
+        <!-- Selected Flight Summary Header Card -->
+        <div class="glass-panel" id="booking-flight-header" style="padding: 1.5rem 2rem; margin-bottom: 2rem;">
+          <!-- Dynamically populated flight route and timing summary -->
+        </div>
+
+        <!-- Seat Map & Booking Information Layout -->
+        <div class="seat-map-container">
+          <!-- Left: Aircraft Fuselage Interactive Seat Map -->
+          <div class="glass-panel" style="padding: 2rem;">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+              <h2>Select Your Cabin Seats</h2>
+              <p>Click on any available seat to reserve. Hover to view category & amenities.</p>
+            </div>
+
+            <!-- Cabin Class Selector -->
+            <div class="cabin-class-tabs" id="cabin-class-selector">
+              <button class="cabin-tab" data-class="first">
+                <span>First Class Suite</span>
+                <span class="cabin-price-badge">1-2-1 Flatbed Pods</span>
+              </button>
+              <button class="cabin-tab" data-class="business">
+                <span>Business Class</span>
+                <span class="cabin-price-badge">2-2-2 Direct Recliner</span>
+              </button>
+              <button class="cabin-tab active" data-class="economy">
+                <span>Economy Class</span>
+                <span class="cabin-price-badge">3-3-3 Standard Ergonomic</span>
+              </button>
+            </div>
+
+            <!-- Airplane Fuselage Graphic -->
+            <div class="airplane-fuselage">
+              <div class="cockpit-nose">👨‍✈️ Cockpit</div>
+              <div class="wing-indicator wing-left">Wing ◀</div>
+              <div class="wing-indicator wing-right">▶ Wing</div>
+
+              <!-- Interactive Seat Rows Rendered by JS -->
+              <div id="cabin-seat-grid">
+                <!-- Dynamically populated seats -->
+              </div>
+            </div>
+
+            <!-- Seat Map Legend -->
+            <div class="seat-map-legend">
+              <div class="legend-item">
+                <div class="legend-seat-sample" style="background: #1e293b; border: 1px solid rgba(255,255,255,0.2);"></div>
+                <span>Available Economy</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-seat-sample" style="background: #172554; border: 1px solid rgba(96,165,250,0.5);"></div>
+                <span>Business Class</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-seat-sample" style="background: #2a1e3a; border: 1px solid rgba(192,132,252,0.5);"></div>
+                <span>First Suite</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-seat-sample" style="background: linear-gradient(135deg, #00e5ff, #0084ff);"></div>
+                <span>Your Selected Seat</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-seat-sample" style="background: #0f172a; opacity: 0.5;"></div>
+                <span>Booked / Occupied</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Passenger Details & Travel Add-ons Form -->
+          <div class="booking-checkout-panel">
+            <!-- Passenger Information -->
+            <div class="glass-panel checkout-card">
+              <h3 style="margin-bottom: 1.25rem; display: flex; align-items: center; gap: 8px;">
+                <span>👤</span> Passenger Details
+              </h3>
+              
+              <div class="search-field-group" style="margin-bottom: 12px;">
+                <label for="passenger-fullname">Full Legal Name (as per Passport/ID)</label>
+                <input type="text" id="passenger-fullname" class="input-box" placeholder="e.g. Alexander Wright" value="Alexander Wright" required>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                <div class="search-field-group">
+                  <label for="passenger-gender">Gender</label>
+                  <select id="passenger-gender" class="input-box">
+                    <option value="Male" selected>Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="search-field-group">
+                  <label for="passenger-age">Age</label>
+                  <input type="number" id="passenger-age" class="input-box" value="34" min="1" max="100">
+                </div>
+              </div>
+
+              <div class="search-field-group" style="margin-bottom: 12px;">
+                <label for="passenger-passport">Passport / Govt ID Number</label>
+                <input type="text" id="passenger-passport" class="input-box" placeholder="e.g. US-92847291" value="US-92847291" required>
+              </div>
+
+              <div class="search-field-group" style="margin-bottom: 12px;">
+                <label for="passenger-email">Email Address (for E-Ticket delivery)</label>
+                <input type="email" id="passenger-email" class="input-box" placeholder="e.g. traveler@example.com" value="passenger@example.com" required>
+              </div>
+
+              <div class="search-field-group">
+                <label for="passenger-phone">Mobile Phone</label>
+                <input type="tel" id="passenger-phone" class="input-box" placeholder="+1 (555) 234-5678" value="+1 (555) 234-5678" required>
+              </div>
+            </div>
+
+            <!-- Travel Add-ons (In-flight meals, baggage, insurance) -->
+            <div class="glass-panel checkout-card">
+              <h3 style="margin-bottom: 1.25rem; display: flex; align-items: center; gap: 8px;">
+                <span>✨</span> In-Flight Services & Add-ons
+              </h3>
+
+              <!-- In-Flight Meal Selection -->
+              <div class="search-field-group" style="margin-bottom: 14px;">
+                <label for="addon-meal">🍽️ Gourmet Meal Selection</label>
+                <select id="addon-meal" class="input-box">
+                  <option value="Complimentary Airline Meal (Standard)">Standard Airline Meal (Included - $0)</option>
+                  <option value="Chef Special - Grilled Herb Salmon">Chef's Grilled Herb Salmon (+$25)</option>
+                  <option value="Asian Vegetarian Delight">Asian Vegetarian Delight (+$15)</option>
+                  <option value="Halal Gourmet Feast">Halal Gourmet Feast (+$18)</option>
+                  <option value="Gluten-Free Nutritive Platter">Gluten-Free Nutritive Platter (+$20)</option>
+                </select>
+              </div>
+
+              <!-- Extra Baggage -->
+              <div class="search-field-group" style="margin-bottom: 14px;">
+                <label for="addon-baggage">🧳 Checked Baggage Allowance</label>
+                <select id="addon-baggage" class="input-box">
+                  <option value="Standard 23kg Allowance">Standard 23kg Allowance (Included - $0)</option>
+                  <option value="Extra 15kg Allowance">Extra 15kg Allowance (+$45)</option>
+                  <option value="Extra 25kg Allowance">Extra 25kg Allowance (+$75)</option>
+                </select>
+              </div>
+
+              <!-- Insurance Checkbox -->
+              <label class="addon-item">
+                <div class="addon-left">
+                  <span class="addon-icon">🛡️</span>
+                  <div class="addon-text-wrap">
+                    <h5>Comprehensive Travel Protection</h5>
+                    <p>Covers flight delays, medical, and lost baggage</p>
+                  </div>
+                </div>
+                <div>
+                  <input type="checkbox" id="addon-insurance" checked style="accent-color: var(--accent-cyan); width: 18px; height: 18px;">
+                  <span class="addon-price" style="display: block; text-align: right;">+$29</span>
+                </div>
+              </label>
+
+              <!-- Priority Boarding Checkbox -->
+              <label class="addon-item">
+                <div class="addon-left">
+                  <span class="addon-icon">⚡</span>
+                  <div class="addon-text-wrap">
+                    <h5>Priority Check-in & Boarding</h5>
+                    <p>Skip lines, express security, early overhead bins</p>
+                  </div>
+                </div>
+                <div>
+                  <input type="checkbox" id="addon-priority" checked style="accent-color: var(--accent-cyan); width: 18px; height: 18px;">
+                  <span class="addon-price" style="display: block; text-align: right;">+$19</span>
+                </div>
+              </label>
+            </div>
+
+            <!-- Price Breakdown & Checkout Button -->
+            <div class="glass-panel checkout-card">
+              <h4>Fare Summary</h4>
+              <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+                Selected Seats: <span id="summary-selected-seats" style="font-weight: 700; color: var(--accent-cyan);">None selected</span>
+              </div>
+
+              <table class="fare-calc-table">
+                <tr>
+                  <td>Base Flight Fare</td>
+                  <td id="calc-base-fare">$0</td>
+                </tr>
+                <tr>
+                  <td>Seat Selection Fee</td>
+                  <td id="calc-seat-fee">$0</td>
+                </tr>
+                <tr>
+                  <td>Travel Add-ons & Insurance</td>
+                  <td id="calc-addons-fee">$48</td>
+                </tr>
+                <tr>
+                  <td>Airport Taxes & Security Surcharge</td>
+                  <td id="calc-taxes-fee">$65</td>
+                </tr>
+                <tr class="total-row">
+                  <td>Total Payable</td>
+                  <td id="calc-total-fare">$0</td>
+                </tr>
+              </table>
+
+              <button class="btn btn-primary btn-lg" id="btn-proceed-to-payment" style="width: 100%;">
+                <span>🔒</span> Proceed to Payment
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         PAGE 3: TICKET PAYMENT PAGE
+         ========================================================================= -->
+    <section class="page-view" id="view-payment" style="display: none;">
+      <div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+          <button class="btn btn-secondary btn-sm" id="btn-back-to-booking">
+            ← Back to Seat Selection
+          </button>
+          <div class="hero-tag" style="margin-bottom: 0;">
+            Step 2 of 3: Secure Payment Gateway
+          </div>
+        </div>
+
+        <div class="payment-layout">
+          <!-- Left: Payment Method Forms -->
+          <div class="glass-panel" style="padding: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+              <div>
+                <h2>Payment Details</h2>
+                <p>All transactions are 256-bit encrypted and PCI-DSS verified.</p>
+              </div>
+              <div style="padding: 6px 12px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; font-size: 0.8rem; color: var(--status-confirmed); font-weight: 700;">
+                🔒 SSL Encrypted
+              </div>
+            </div>
+
+            <!-- Payment Tabs -->
+            <div class="payment-methods-tabs">
+              <button class="pay-tab-btn active" data-pay-method="card">
+                <span>💳</span> Credit / Debit Card
+              </button>
+              <button class="pay-tab-btn" data-pay-method="upi">
+                <span>📲</span> UPI / QR Code
+              </button>
+              <button class="pay-tab-btn" data-pay-method="netbanking">
+                <span>🏛️</span> Net Banking
+              </button>
+              <button class="pay-tab-btn" data-pay-method="wallet">
+                <span>👛</span> Digital Wallet
+              </button>
+            </div>
+
+            <!-- Tab 1: Credit / Debit Card -->
+            <div id="pay-panel-card" class="pay-panel active">
+              <!-- Visual Card Preview -->
+              <div class="virtual-card-wrapper">
+                <div class="virtual-card">
+                  <div class="card-top">
+                    <div class="card-chip"></div>
+                    <div class="card-type-logo" id="preview-card-type">VISA</div>
+                  </div>
+                  <div class="card-num-display" id="preview-card-number">
+                    •••• •••• •••• 4242
+                  </div>
+                  <div class="card-bottom">
+                    <div>
+                      <div style="font-size: 0.65rem; color: #94a3b8; text-transform: uppercase;">Card Holder</div>
+                      <div class="card-holder-name" id="preview-card-holder">Alexander Wright</div>
+                    </div>
+                    <div style="text-align: right;">
+                      <div style="font-size: 0.65rem; color: #94a3b8; text-transform: uppercase;">Expires</div>
+                      <div class="card-expiry-val" id="preview-card-expiry">12/28</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card Form -->
+              <form id="payment-card-form">
+                <div class="search-field-group" style="margin-bottom: 14px;">
+                  <label for="card-holder-input">Cardholder Name</label>
+                  <input type="text" id="card-holder-input" class="input-box" value="Alexander Wright" required>
+                </div>
+
+                <div class="search-field-group" style="margin-bottom: 14px;">
+                  <label for="card-number-input">Card Number</label>
+                  <input type="text" id="card-number-input" class="input-box" placeholder="4242 4242 4242 4242" value="4532 8912 3456 4242" maxlength="19" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem;">
+                  <div class="search-field-group">
+                    <label for="card-expiry-input">Expiry Date (MM/YY)</label>
+                    <input type="text" id="card-expiry-input" class="input-box" placeholder="MM/YY" value="09/29" maxlength="5" required>
+                  </div>
+                  <div class="search-field-group">
+                    <label for="card-cvv-input">Security CVV / CVC</label>
+                    <input type="password" id="card-cvv-input" class="input-box" placeholder="•••" value="882" maxlength="4" required>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-accent btn-lg" id="btn-submit-payment" style="width: 100%;">
+                  <span>⚡</span> Authorize & Pay $<span id="pay-button-amount">0</span>
+                </button>
+              </form>
+            </div>
+
+            <!-- Tab 2: UPI / QR Code -->
+            <div id="pay-panel-upi" class="pay-panel" style="display: none;">
+              <div class="upi-qr-box">
+                <div class="qr-code-graphic">
+                  <!-- Vector QR Code representation -->
+                  <svg width="180" height="180" viewBox="0 0 100 100">
+                    <rect width="100" height="100" fill="#ffffff"/>
+                    <rect x="10" y="10" width="24" height="24" fill="#0f172a"/>
+                    <rect x="14" y="14" width="16" height="16" fill="#ffffff"/>
+                    <rect x="18" y="18" width="8" height="8" fill="#0f172a"/>
+                    <rect x="66" y="10" width="24" height="24" fill="#0f172a"/>
+                    <rect x="70" y="14" width="16" height="16" fill="#ffffff"/>
+                    <rect x="74" y="18" width="8" height="8" fill="#0f172a"/>
+                    <rect x="10" y="66" width="24" height="24" fill="#0f172a"/>
+                    <rect x="14" y="70" width="16" height="16" fill="#ffffff"/>
+                    <rect x="18" y="74" width="8" height="8" fill="#0f172a"/>
+                    <rect x="42" y="15" width="6" height="12" fill="#0f172a"/>
+                    <rect x="42" y="35" width="16" height="6" fill="#0f172a"/>
+                    <rect x="15" y="42" width="6" height="16" fill="#0f172a"/>
+                    <rect x="40" y="45" width="20" height="20" fill="#0f172a"/>
+                    <rect x="45" y="50" width="10" height="10" fill="#ffffff"/>
+                    <rect x="70" y="45" width="15" height="6" fill="#0f172a"/>
+                    <rect x="45" y="75" width="20" height="10" fill="#0f172a"/>
+                    <rect x="75" y="65" width="15" height="20" fill="#0f172a"/>
+                  </svg>
+                </div>
+                <h4>Scan QR with Any UPI / Mobile Banking App</h4>
+                <p style="margin: 6px 0 16px;">Supports Google Pay, PhonePe, Paytm, BHIM & Apple Pay</p>
+                <div style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-cyan); margin-bottom: 1.5rem;">
+                  UPI ID: skywings.payment@hdfcbank
+                </div>
+                <button type="button" class="btn btn-accent btn-lg" id="btn-simulate-upi-pay">
+                  <span>📱</span> Simulate Successful UPI Approval
+                </button>
+              </div>
+            </div>
+
+            <!-- Tab 3: Net Banking -->
+            <div id="pay-panel-netbanking" class="pay-panel" style="display: none;">
+              <h4 style="margin-bottom: 1rem;">Select Your Bank</h4>
+              <div class="search-field-group" style="margin-bottom: 1.5rem;">
+                <label for="bank-select">Popular Banking Institutions</label>
+                <select id="bank-select" class="input-box">
+                  <option value="HDFC">HDFC Bank</option>
+                  <option value="SBI">State Bank of India</option>
+                  <option value="ICICI">ICICI Bank</option>
+                  <option value="CHASE">JPMorgan Chase & Co.</option>
+                  <option value="HSBC">HSBC Holdings</option>
+                  <option value="CITI">Citibank International</option>
+                  <option value="BARCLAYS">Barclays Bank</option>
+                </select>
+              </div>
+              <button type="button" class="btn btn-accent btn-lg" id="btn-simulate-netbanking-pay" style="width: 100%;">
+                <span>🏛️</span> Proceed to Secure Bank Gateway
+              </button>
+            </div>
+
+            <!-- Tab 4: Digital Wallet -->
+            <div id="pay-panel-wallet" class="pay-panel" style="display: none;">
+              <h4 style="margin-bottom: 1rem;">Choose Digital Wallet</h4>
+              <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.5rem;">
+                <button type="button" class="btn btn-secondary" style="justify-content: flex-start; padding: 12px 18px;" onclick="simulateWalletPay('Apple Pay')">
+                  🍎 Apple Pay (Instant FaceID Authorization)
+                </button>
+                <button type="button" class="btn btn-secondary" style="justify-content: flex-start; padding: 12px 18px;" onclick="simulateWalletPay('PayPal')">
+                  🅿️ PayPal Express Checkout
+                </button>
+                <button type="button" class="btn btn-secondary" style="justify-content: flex-start; padding: 12px 18px;" onclick="simulateWalletPay('Google Pay')">
+                  🌐 Google Pay
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Order & Booking Summary Card -->
+          <div class="booking-checkout-panel">
+            <div class="glass-panel checkout-card">
+              <h3>Flight Itinerary Summary</h3>
+              <div id="payment-itinerary-details" style="margin-top: 1rem;">
+                <!-- Dynamically populated summary -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         PAGE 4: VIEW BOOKING STATUS PAGE (PNR TRACKER)
+         ========================================================================= -->
+    <section class="page-view" id="view-status" style="display: none;">
+      <div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+        <div class="hero-banner" style="padding-top: 1rem; padding-bottom: 2rem;">
+          <div class="hero-tag">
+            <span>🛰️</span> Live Flight & PNR Status Tracking
+          </div>
+          <h2>Track Your Flight & Booking Status</h2>
+          <p class="hero-desc">Enter your 9-character PNR or booking reference to check live status, gate assignment, boarding schedule, and aircraft updates.</p>
+
+          <!-- PNR Search Bar -->
+          <div class="glass-panel" style="max-width: 650px; margin: 0 auto; padding: 1.5rem;">
+            <form id="pnr-lookup-form" style="display: flex; gap: 10px;">
+              <input type="text" id="pnr-input" class="input-box" placeholder="Enter PNR (e.g. SKYW-9824)" style="text-transform: uppercase; font-family: var(--font-mono); font-weight: 700; font-size: 1.1rem;" required>
+              <button type="submit" class="btn btn-primary" style="white-space: nowrap;">
+                <span>🔍</span> Check Status
+              </button>
+            </form>
+
+            <!-- Quick Demo PNR Suggestions -->
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted); flex-wrap: wrap;">
+              <span>Try Demo Bookings:</span>
+              <button type="button" class="btn btn-outline btn-sm demo-pnr-btn" data-pnr="SKYW-9824">SKYW-9824</button>
+              <button type="button" class="btn btn-outline btn-sm demo-pnr-btn" data-pnr="SKYW-4110">SKYW-4110</button>
+              <button type="button" class="btn btn-outline btn-sm demo-pnr-btn" data-pnr="SKYW-7721">SKYW-7721</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Card Results Output -->
+        <div id="status-result-area" style="max-width: 950px; margin: 0 auto;">
+          <!-- Dynamically populated live status timeline & itinerary -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         PAGE 5: MY TICKETS / MANAGE RESERVATIONS PAGE
+         ========================================================================= -->
+    <section class="page-view" id="view-my-tickets" style="display: none;">
+      <div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2>My Bookings & Travel Itineraries</h2>
+            <p>View your confirmed flights, download boarding passes, or manage cancellations.</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-primary btn-sm" id="btn-book-another-flight">
+              <span>➕</span> Book Another Flight
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Sub-tabs -->
+        <div class="cabin-class-tabs" style="max-width: 600px; margin-bottom: 1.5rem;" id="my-tickets-tabs">
+          <button class="cabin-tab active" data-filter="all">All Bookings</button>
+          <button class="cabin-tab" data-filter="confirmed">Active / Confirmed</button>
+          <button class="cabin-tab" data-filter="cancelled">Cancelled</button>
+        </div>
+
+        <!-- Booking Cards Grid -->
+        <div id="my-tickets-list-container" style="display: flex; flex-direction: column; gap: 16px;">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         PAGE 6: PRINT TICKET / E-TICKET VIEW
+         ========================================================================= -->
+    <section class="page-view" id="view-print-ticket" style="display: none;">
+      <div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+        <!-- Top Toolbar -->
+        <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+          <button class="btn btn-secondary btn-sm" id="btn-back-from-print">
+            ← Back to My Bookings
+          </button>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-primary" id="btn-trigger-print">
+              <span>🖨️</span> Print Official Boarding Pass
+            </button>
+            <button class="btn btn-outline" id="btn-email-ticket">
+              <span>✉️</span> Email E-Ticket Copy
+            </button>
+          </div>
+        </div>
+
+        <!-- Printable Boarding Pass & Official E-Ticket Layout -->
+        <div class="ticket-print-wrapper" id="printable-boarding-pass-container">
+          <!-- Rendered dynamically by JS with QR codes and barcode -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         PAGE 7: CANCEL TICKET PAGE & REFUND CALCULATOR
+         ========================================================================= -->
+    <section class="page-view" id="view-cancel-ticket" style="display: none;">
+      <div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+        <div class="hero-banner" style="padding-top: 1rem; padding-bottom: 2rem;">
+          <div class="hero-tag" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #f87171;">
+            <span>❌</span> Ticket Cancellation & Refund Management
+          </div>
+          <h2>Instant Ticket Cancellation & Refund Calculator</h2>
+          <p class="hero-desc">Select an active reservation to calculate real-time refunds as per airline tariff rules. Refund amount is credited immediately to the original payment source.</p>
+        </div>
+
+        <div style="max-width: 800px; margin: 0 auto;">
+          <div class="glass-panel" style="padding: 2.5rem;">
+            <!-- Step 1: Select Booking to Cancel -->
+            <div class="search-field-group" style="margin-bottom: 1.5rem;">
+              <label for="cancel-booking-select">Select Active Booking</label>
+              <select id="cancel-booking-select" class="input-box">
+                <!-- Populated by JS -->
+              </select>
+            </div>
+
+            <!-- Ticket Details Preview -->
+            <div id="cancel-ticket-preview" style="background: rgba(14, 23, 46, 0.8); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
+              <!-- Details rendered dynamically -->
+            </div>
+
+            <!-- Step 2: Cancellation Reason -->
+            <div class="search-field-group" style="margin-bottom: 1.5rem;">
+              <label for="cancel-reason">Reason for Cancellation</label>
+              <select id="cancel-reason" class="input-box">
+                <option value="Schedule Conflict / Plan Changed">Change in Travel Plans</option>
+                <option value="Personal Emergency">Personal / Medical Emergency</option>
+                <option value="Flight Timing Adjustment">Flight Schedule Not Suitable</option>
+                <option value="Visa Processing Delay">Visa / Entry Documentation Delay</option>
+                <option value="Booked Alternate Carrier">Alternative Flight Arranged</option>
+              </select>
+            </div>
+
+            <!-- Step 3: Refund Breakdown -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 2rem;">
+              <h4 style="margin-bottom: 1rem; color: var(--accent-cyan);">Transparent Refund Calculation</h4>
+              <table class="fare-calc-table">
+                <tr>
+                  <td>Total Fare Originally Paid</td>
+                  <td id="refund-original-fare">$0</td>
+                </tr>
+                <tr>
+                  <td>Airline Standard Cancellation Fee</td>
+                  <td id="refund-deduction" style="color: #ef4444;">-$75</td>
+                </tr>
+                <tr>
+                  <td>Airport Tax & User Development Fee (100% Refundable)</td>
+                  <td id="refund-tax-amount" style="color: var(--status-confirmed);">+$65</td>
+                </tr>
+                <tr class="total-row">
+                  <td>Net Refund Credit Amount</td>
+                  <td id="refund-net-total" style="color: var(--status-confirmed); font-size: 1.4rem;">$0</td>
+                </tr>
+              </table>
+              <div style="font-size: 0.78rem; color: var(--text-dim); margin-top: 8px;">
+                ℹ️ The refundable balance will be credited to original payment source within 24-48 business hours.
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <button class="btn btn-danger btn-lg" id="btn-confirm-cancel-ticket" style="width: 100%;">
+              <span>⚠️</span> Confirm Ticket Cancellation & Process Refund
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         PAGE 8: CUSTOMER FEEDBACK & COMMUNITY REVIEWS
+         ========================================================================= -->
+    <section class="page-view" id="view-feedback" style="display: none;">
+      <div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+        <div class="hero-banner" style="padding-top: 1rem; padding-bottom: 2rem;">
+          <div class="hero-tag">
+            <span>💬</span> Passenger Experience & Reviews
+          </div>
+          <h2>Customer Feedback & Testimonials</h2>
+          <p class="hero-desc">Your voice powers our relentless pursuit of aviation excellence. Share your flying experience or rate our online reservation platform.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 2rem;">
+          <!-- Left: Feedback Submission Form -->
+          <div class="glass-panel" style="padding: 2rem;">
+            <h3 style="margin-bottom: 1.25rem;">Share Your Experience</h3>
+            
+            <form id="feedback-form">
+              <div class="search-field-group" style="margin-bottom: 12px;">
+                <label for="fb-fullname">Your Full Name</label>
+                <input type="text" id="fb-fullname" class="input-box" value="Alexander Wright" required>
+              </div>
+
+              <div class="search-field-group" style="margin-bottom: 12px;">
+                <label for="fb-flight">Flight Number or Route (Optional)</label>
+                <input type="text" id="fb-flight" class="input-box" placeholder="e.g. EK-201 (DXB → JFK)" value="EK-201 (DXB → JFK)">
+              </div>
+
+              <div class="search-field-group" style="margin-bottom: 12px;">
+                <label for="fb-category">Feedback Category</label>
+                <select id="fb-category" class="input-box">
+                  <option value="Booking & Reservation Experience">Booking & Reservation Ease</option>
+                  <option value="Cabin Comfort & Seats">Cabin Comfort & In-Flight Seats</option>
+                  <option value="Cabin Crew & Service">Cabin Crew & Hospitality</option>
+                  <option value="Punctuality & Boarding">Punctuality & Gate Experience</option>
+                  <option value="Food & In-Flight Meals">Food & Beverage Quality</option>
+                </select>
+              </div>
+
+              <!-- Interactive Star Rating -->
+              <div class="search-field-group" style="margin-bottom: 14px;">
+                <label>Overall Experience Rating</label>
+                <div id="star-rating-selector" style="display: flex; gap: 8px; font-size: 1.8rem; cursor: pointer; color: var(--accent-gold);">
+                  <span class="star-icon" data-rating="1">★</span>
+                  <span class="star-icon" data-rating="2">★</span>
+                  <span class="star-icon" data-rating="3">★</span>
+                  <span class="star-icon" data-rating="4">★</span>
+                  <span class="star-icon" data-rating="5">★</span>
+                </div>
+                <input type="hidden" id="fb-rating-val" value="5">
+              </div>
+
+              <div class="search-field-group" style="margin-bottom: 1.5rem;">
+                <label for="fb-comments">Detailed Comments</label>
+                <textarea id="fb-comments" class="input-box" rows="4" placeholder="Tell us what you liked or how we can improve our service..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <span>📤</span> Submit Verified Feedback
+              </button>
+            </form>
+          </div>
+
+          <!-- Right: Live Community Reviews Feed -->
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <h3>Verified Traveler Reviews</h3>
+              <span style="font-size: 0.85rem; color: var(--accent-cyan); font-weight: 700;">4.9 / 5.0 (520+ Reviews)</span>
+            </div>
+
+            <div id="feedback-reviews-feed" style="display: flex; flex-direction: column; gap: 14px;">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         PAGE 9 & 10: ADMINISTRATOR DASHBOARD & OPERATIONS REPORT
+         ========================================================================= -->
+    <section class="page-view" id="view-admin" style="display: none;">
+      <div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <div class="hero-tag" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #fbbf24;">
+              <span>🔐</span> Flight Operations & Executive Administration
+            </div>
+            <h2>Aviation Operations Management & Reports</h2>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-outline btn-sm" id="btn-export-admin-csv">
+              <span>📥</span> Export Report (CSV)
+            </button>
+            <button class="btn btn-primary btn-sm" id="btn-open-add-flight-modal">
+              <span>➕</span> Add New Flight Schedule
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="admin-kpi-grid">
+          <div class="glass-panel kpi-card">
+            <div class="kpi-icon-wrap kpi-blue">💰</div>
+            <div class="kpi-meta">
+              <span class="kpi-val" id="admin-kpi-revenue">$1,248,600</span>
+              <span class="kpi-title">Total Revenue Generated</span>
+            </div>
+          </div>
+
+          <div class="glass-panel kpi-card">
+            <div class="kpi-icon-wrap kpi-cyan">🎫</div>
+            <div class="kpi-meta">
+              <span class="kpi-val" id="admin-kpi-bookings">1,480</span>
+              <span class="kpi-title">Confirmed Bookings</span>
+            </div>
+          </div>
+
+          <div class="glass-panel kpi-card">
+            <div class="kpi-icon-wrap kpi-green">✈️</div>
+            <div class="kpi-meta">
+              <span class="kpi-val" id="admin-kpi-flights">10</span>
+              <span class="kpi-title">Active Scheduled Routes</span>
+            </div>
+          </div>
+
+          <div class="glass-panel kpi-card">
+            <div class="kpi-icon-wrap kpi-gold">💺</div>
+            <div class="kpi-meta">
+              <span class="kpi-val" id="admin-kpi-occupancy">88.4%</span>
+              <span class="kpi-title">Average Fleet Occupancy</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Sub-Navigation Tabs -->
+        <div class="admin-tabs" id="admin-nav-tabs">
+          <button class="admin-tab-btn active" data-admin-panel="flights">Flight Schedules</button>
+          <button class="admin-tab-btn" data-admin-panel="inventory">Seat Inventory</button>
+          <button class="admin-tab-btn" data-admin-panel="users">Registered Users</button>
+          <button class="admin-tab-btn" data-admin-panel="reports">Revenue & Route Analytics</button>
+        </div>
+
+        <!-- Admin Panel 1: Flight Schedules Table -->
+        <div id="admin-panel-flights" class="admin-subpanel active">
+          <div class="glass-panel" style="padding: 1.5rem;">
+            <div class="data-table-wrap">
+              <table class="sky-table" id="admin-flights-table">
+                <thead>
+                  <tr>
+                    <th>Flight No</th>
+                    <th>Airline</th>
+                    <th>Route</th>
+                    <th>Departure / Arrival</th>
+                    <th>Aircraft</th>
+                    <th>Economy Fare</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-flights-tbody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Panel 2: Seat Inventory Visualizer -->
+        <div id="admin-panel-inventory" class="admin-subpanel" style="display: none;">
+          <div class="glass-panel" style="padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+              <div>
+                <h3>Real-Time Seat Inventory Inspection</h3>
+                <p>Select any flight to view occupied seats or manually hold/release inventory.</p>
+              </div>
+              <div style="width: 300px;">
+                <select id="admin-inventory-flight-select" class="input-box">
+                  <!-- Populated with flights -->
+                </select>
+              </div>
+            </div>
+
+            <div id="admin-inventory-display">
+              <!-- Rendered flight seat summary -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Panel 3: Registered Users & Passengers -->
+        <div id="admin-panel-users" class="admin-subpanel" style="display: none;">
+          <div class="glass-panel" style="padding: 1.5rem;">
+            <h3 style="margin-bottom: 1rem;">Registered Passenger & Admin Accounts</h3>
+            <div class="data-table-wrap">
+              <table class="sky-table">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
+                    <th>Role</th>
+                    <th>Phone</th>
+                    <th>Registered Date</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-users-tbody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Panel 4: Revenue & Route Performance Report -->
+        <div id="admin-panel-reports" class="admin-subpanel" style="display: none;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="glass-panel" style="padding: 1.75rem;">
+              <h3 style="margin-bottom: 1rem;">Top Performing Flight Corridors</h3>
+              <div id="admin-top-routes-list" style="display: flex; flex-direction: column; gap: 12px;">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <div class="glass-panel" style="padding: 1.75rem;">
+              <h3 style="margin-bottom: 1rem;">Fleet Capacity Utilization</h3>
+              <div id="admin-fleet-utilization" style="display: flex; flex-direction: column; gap: 12px;">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       MODAL 1: AUTHENTICATION & LOGIN / FORGOT PASSWORD MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="auth-modal-title">SkyWings Account Access</h3>
+        <button type="button" class="btn-close-modal" id="btn-close-auth-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Auth Sub-tabs -->
+        <div class="cabin-class-tabs" style="margin-bottom: 1.5rem;" id="auth-tabs">
+          <button class="cabin-tab active" data-auth-tab="login">Passenger Login</button>
+          <button class="cabin-tab" data-auth-tab="register">Register</button>
+          <button class="cabin-tab" data-auth-tab="admin">Admin Portal</button>
+          <button class="cabin-tab" data-auth-tab="forgot">Forgot Password</button>
+        </div>
+
+        <!-- Tab 1: Customer Login -->
+        <form id="form-customer-login">
+          <div class="search-field-group" style="margin-bottom: 12px;">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" class="input-box" value="passenger@example.com" required>
+          </div>
+          <div class="search-field-group" style="margin-bottom: 1.5rem;">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" class="input-box" value="user123" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            <span>🚀</span> Sign In as Passenger
+          </button>
+        </form>
+
+        <!-- Tab 2: Customer Register -->
+        <form id="form-customer-register" style="display: none;">
+          <div class="search-field-group" style="margin-bottom: 12px;">
+            <label for="reg-fullname">Full Name</label>
+            <input type="text" id="reg-fullname" class="input-box" placeholder="e.g. John Doe" required>
+          </div>
+          <div class="search-field-group" style="margin-bottom: 12px;">
+            <label for="reg-email">Email Address</label>
+            <input type="email" id="reg-email" class="input-box" placeholder="e.g. john@domain.com" required>
+          </div>
+          <div class="search-field-group" style="margin-bottom: 12px;">
+            <label for="reg-phone">Phone Number</label>
+            <input type="tel" id="reg-phone" class="input-box" placeholder="+1 (555) 000-0000" required>
+          </div>
+          <div class="search-field-group" style="margin-bottom: 1.5rem;">
+            <label for="reg-password">Create Password</label>
+            <input type="password" id="reg-password" class="input-box" placeholder="Minimum 6 characters" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            <span>✨</span> Create SkyWings Account
+          </button>
+        </form>
+
+        <!-- Tab 3: Administrator Login -->
+        <form id="form-admin-login" style="display: none;">
+          <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; padding: 10px; margin-bottom: 12px; font-size: 0.82rem; color: #fbbf24;">
+            🔐 Restricted Access: Flight Operations & Dispatch Team Only.
+          </div>
+          <div class="search-field-group" style="margin-bottom: 12px;">
+            <label for="admin-email">Administrator Email</label>
+            <input type="email" id="admin-email" class="input-box" value="admin@skywings.com" required>
+          </div>
+          <div class="search-field-group" style="margin-bottom: 1.5rem;">
+            <label for="admin-password">Operations Passcode</label>
+            <input type="password" id="admin-password" class="input-box" value="admin123" required>
+          </div>
+          <button type="submit" class="btn btn-accent" style="width: 100%; margin-bottom: 10px;">
+            <span>🛡️</span> Authenticate as Administrator
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-quick-fill-admin" style="width: 100%;">
+            Quick Fill Demo Admin Credentials
+          </button>
+        </form>
+
+        <!-- Tab 4: Forgot Password Flow -->
+        <form id="form-forgot-password" style="display: none;">
+          <p style="font-size: 0.85rem; margin-bottom: 1rem;">
+            Enter your registered email address to receive an immediate security OTP code to reset your account password.
+          </p>
+          <div class="search-field-group" style="margin-bottom: 12px;">
+            <label for="forgot-email">Registered Email Address</label>
+            <input type="email" id="forgot-email" class="input-box" placeholder="e.g. passenger@example.com" value="passenger@example.com" required>
+          </div>
+          
+          <div id="otp-input-group" style="display: none; margin-bottom: 12px;">
+            <div class="search-field-group" style="margin-bottom: 10px;">
+              <label for="forgot-otp">Enter 6-Digit OTP (Check Toast/Demo Code: <strong>894215</strong>)</label>
+              <input type="text" id="forgot-otp" class="input-box" placeholder="894215" maxlength="6">
+            </div>
+            <div class="search-field-group">
+              <label for="forgot-new-pass">New Password</label>
+              <input type="password" id="forgot-new-pass" class="input-box" placeholder="Enter new strong password">
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-primary" id="btn-send-otp" style="width: 100%;">
+            <span>✉️</span> Send Reset OTP
+          </button>
+          <button type="button" class="btn btn-accent" id="btn-verify-reset-pass" style="width: 100%; display: none;">
+            <span>✅</span> Verify OTP & Reset Password
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: ADD FLIGHT SCHEDULE (ADMIN)
+       ========================================================================= -->
+  <div class="modal-overlay" id="add-flight-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Add New Flight Schedule</h3>
+        <button type="button" class="btn-close-modal" id="btn-close-add-flight-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-add-flight">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+            <div class="search-field-group">
+              <label for="af-number">Flight Number</label>
+              <input type="text" id="af-number" class="input-box" placeholder="e.g. EK-512" required>
+            </div>
+            <div class="search-field-group">
+              <label for="af-airline">Airline</label>
+              <input type="text" id="af-airline" class="input-box" placeholder="e.g. Emirates" required>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+            <div class="search-field-group">
+              <label for="af-origin">Origin (Airport Code)</label>
+              <select id="af-origin" class="input-box">
+                <option value="DXB">DXB - Dubai</option>
+                <option value="JFK">JFK - New York</option>
+                <option value="LHR">LHR - London</option>
+                <option value="SIN">SIN - Singapore</option>
+                <option value="DEL">DEL - New Delhi</option>
+                <option value="BOM">BOM - Mumbai</option>
+                <option value="HND">HND - Tokyo</option>
+                <option value="CDG">CDG - Paris</option>
+                <option value="FRA">FRA - Frankfurt</option>
+                <option value="SYD">SYD - Sydney</option>
+              </select>
+            </div>
+            <div class="search-field-group">
+              <label for="af-destination">Destination Code</label>
+              <select id="af-destination" class="input-box">
+                <option value="JFK">JFK - New York</option>
+                <option value="LHR">LHR - London</option>
+                <option value="DXB">DXB - Dubai</option>
+                <option value="SIN">SIN - Singapore</option>
+                <option value="DEL">DEL - New Delhi</option>
+                <option value="BOM">BOM - Mumbai</option>
+                <option value="HND">HND - Tokyo</option>
+                <option value="CDG">CDG - Paris</option>
+                <option value="FRA">FRA - Frankfurt</option>
+                <option value="SYD">SYD - Sydney</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+            <div class="search-field-group">
+              <label for="af-dept-time">Departure Time</label>
+              <input type="time" id="af-dept-time" class="input-box" value="10:00" required>
+            </div>
+            <div class="search-field-group">
+              <label for="af-arr-time">Arrival Time</label>
+              <input type="time" id="af-arr-time" class="input-box" value="18:30" required>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+            <div class="search-field-group">
+              <label for="af-aircraft">Aircraft Model</label>
+              <input type="text" id="af-aircraft" class="input-box" value="Boeing 787-9 Dreamliner" required>
+            </div>
+            <div class="search-field-group">
+              <label for="af-fare">Economy Base Fare ($)</label>
+              <input type="number" id="af-fare" class="input-box" value="550" min="50" required>
+            </div>
+          </div>
+
+          <div class="search-field-group" style="margin-bottom: 1.5rem;">
+            <label for="af-stops">Flight Route Type</label>
+            <select id="af-stops" class="input-box">
+              <option value="Non-stop">Non-stop</option>
+              <option value="1 Stop">1 Stop Connection</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            <span>✈️</span> Save & Schedule Flight
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
